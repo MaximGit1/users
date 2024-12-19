@@ -1,0 +1,2 @@
+class UserDomainFieldError(Exception):
+    pass
