@@ -17,3 +17,11 @@ alembic revision --autogenerate -m ""
 ```
 alembic upgrade head
 ```
+
+## certs
+- jwt private key
+- jwt public key
+
+## conf
+- alembic.ini
+- gunicorn.conf.py
