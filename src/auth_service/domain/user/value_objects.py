@@ -18,25 +18,23 @@ class UserID(ValueObject, int):
 @dataclass(frozen=True)
 class Username(ValueObject[str]):
     def validate(self) -> None:
-        username_len = len(self._value)
+        username_len = len(self.value)
 
         if username_len < USERNAME_MIN_LEN:
             raise DomainValidationError(
-                f"Username must be more than "
-                f"{USERNAME_MIN_LEN} characters"
+                f"Username must be more than " f"{USERNAME_MIN_LEN} characters"
             )
 
         if username_len > USERNAME_MAX_LEN:
             raise DomainValidationError(
-                f"Username must be less than "
-                f"{USERNAME_MAX_LEN} characters"
+                f"Username must be less than " f"{USERNAME_MAX_LEN} characters"
             )
 
 
 @dataclass(frozen=True)
 class RawPassword(ValueObject[str]):
     def validate(self) -> None:
-        password_len = len(self._value)
+        password_len = len(self.value)
 
         if password_len < PASSWORD_MIN_LEN:
             raise DomainValidationError(

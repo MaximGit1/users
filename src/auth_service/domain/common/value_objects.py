@@ -6,10 +6,7 @@ ValueT = TypeVar("ValueT")
 
 @dataclass(frozen=True)
 class ValueObject(Generic[ValueT]):
-    _value: ValueT
-
-    def to_raw(self) -> ValueT:
-        return self._value
+    value: ValueT
 
     def __post_init__(self) -> None:
         self.validate()
@@ -21,4 +18,4 @@ class ValueObject(Generic[ValueT]):
         """
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.to_raw()!r})"
+        return f"{self.__class__.__name__}({self.value!r})"
