@@ -1,13 +1,7 @@
 from dataclasses import dataclass
 
-from auth_service.domain.common.exceptions import DomainValidationError
 from auth_service.domain.common.value_objects import ValueObject
-from .constants import (
-    PASSWORD_MAX_LEN,
-    PASSWORD_MIN_LEN,
-    USERNAME_MAX_LEN,
-    USERNAME_MIN_LEN,
-)
+from auth_service.domain.user.exceptions import UserDomainValidationError
 
 
 @dataclass(frozen=True)
@@ -18,34 +12,40 @@ class UserID(ValueObject, int):
 @dataclass(frozen=True)
 class Username(ValueObject[str]):
     def validate(self) -> None:
+        username_min_len = 4
+        username_max_len = 15
+
         username_len = len(self.value)
 
-        if username_len < USERNAME_MIN_LEN:
-            raise DomainValidationError(
-                f"Username must be more than " f"{USERNAME_MIN_LEN} characters"
+        if username_len < username_min_len:
+            raise UserDomainValidationError(
+                f"Username must be more than " f"{username_min_len} characters"
             )
 
-        if username_len > USERNAME_MAX_LEN:
-            raise DomainValidationError(
-                f"Username must be less than " f"{USERNAME_MAX_LEN} characters"
+        if username_len > username_max_len:
+            raise UserDomainValidationError(
+                f"Username must be less than " f"{username_max_len} characters"
             )
 
 
 @dataclass(frozen=True)
 class RawPassword(ValueObject[str]):
     def validate(self) -> None:
+        password_min_len = 8
+        password_max_len = 32
+
         password_len = len(self.value)
 
-        if password_len < PASSWORD_MIN_LEN:
-            raise DomainValidationError(
+        if password_len < password_min_len:
+            raise UserDomainValidationError(
                 f"User password must be more than "
-                f"{PASSWORD_MIN_LEN} characters"
+                f"{password_min_len} characters"
             )
 
-        if password_len > PASSWORD_MAX_LEN:
-            raise DomainValidationError(
+        if password_len > password_max_len:
+            raise UserDomainValidationError(
                 f"User password must be less than "
-                f"{USERNAME_MAX_LEN} characters"
+                f"{password_max_len} characters"
             )
 
 
