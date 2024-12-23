@@ -20,7 +20,7 @@ async def _validate(_: "Request", exc: Exception, status: int) -> JSONResponse:
     return JSONResponse(content={"detail": exc.message}, status_code=status)
 
 
-def setup_exc_handlers(app: "FastAPI") -> None:
+def init_exc_handlers(app: "FastAPI") -> None:
     app.add_exception_handler(
         UserDomainValidationError,
         part(_validate, status=code.HTTP_422_UNPROCESSABLE_ENTITY),
@@ -29,3 +29,4 @@ def setup_exc_handlers(app: "FastAPI") -> None:
         UserAlreadyExistsError,
         part(_validate, status=code.HTTP_409_CONFLICT),
     )
+
