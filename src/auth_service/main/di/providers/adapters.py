@@ -19,10 +19,12 @@ from auth_service.application.common.protocols.uow import UoWProtocol
 from auth_service.application.user.protocols import (
     PasswordHasherProtocol,
     UserCreateProtocol,
+    UserReadProtocol,
 )
 from auth_service.infrastructure.user.repositories import (
     PasswordHasherRepository,
     UserCreateRepository,
+    UserReadRepository,
 )
 
 DBURI = NewType("DBURI", str)
@@ -75,6 +77,11 @@ def repository_provider() -> Provider:
         PasswordHasherRepository,
         scope=Scope.APP,
         provides=PasswordHasherProtocol,
+    )
+    provider.provide(
+        UserReadRepository,
+        scope=Scope.REQUEST,
+        provides=UserReadProtocol,
     )
 
     return provider

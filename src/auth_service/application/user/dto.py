@@ -5,6 +5,6 @@ from dataclasses import dataclass
 class UserDTO:
     user_id: int
     username: str
-    password: bytes | None
+    password: bytes
     role: str
     is_active: bool

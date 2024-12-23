@@ -5,6 +5,7 @@ from dataclasses import (
 from auth_service.domain.common.entities import (
     Entity,
 )
+from auth_service.domain.user.enums import RoleEnum
 from auth_service.domain.user.value_objects import (
     HashedPassword,
     UserID,
@@ -19,3 +20,5 @@ from auth_service.domain.user.value_objects import (
 class User(Entity[UserID]):
     username: Username
     hashed_password: HashedPassword
+    role: RoleEnum
+    is_active: bool

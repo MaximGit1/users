@@ -4,7 +4,10 @@ from typing import TYPE_CHECKING, cast
 from starlette import status as code
 from starlette.responses import JSONResponse
 
-from auth_service.application.user.exceptions import UserAlreadyExistsError
+from auth_service.application.user.exceptions import (
+    UserAlreadyExistsError,
+    UserNotFoundError,
+)
 from auth_service.domain.user.exceptions import UserDomainValidationError
 
 if TYPE_CHECKING:
@@ -29,4 +32,7 @@ def init_exc_handlers(app: "FastAPI") -> None:
         UserAlreadyExistsError,
         part(_validate, status=code.HTTP_409_CONFLICT),
     )
-
+    app.add_exception_handler(
+        UserNotFoundError,
+        part(_validate, status=code.HTTP_404_NOT_FOUND),
+    )
