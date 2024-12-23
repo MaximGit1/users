@@ -7,11 +7,13 @@ from auth_service.application.user.protocols import (
     PasswordHasherProtocol,
     UserCreateProtocol,
     UserReadProtocol,
+    UserUpdateProtocol,
 )
 from auth_service.application.user.responses import (
     UserFullBodyResponse,
     UserIdResponse,
 )
+from auth_service.domain.user.enums import RoleEnum
 from auth_service.domain.user.value_objects import (
     RawPassword,
     UserID,
@@ -24,12 +26,14 @@ class UserService:
         self,
         add_repository: UserCreateProtocol,
         read_repository: UserReadProtocol,
+        update_repository: UserUpdateProtocol,
         password_hasher: PasswordHasherProtocol,
         uow: UoWProtocol,
     ) -> None:
         self._password_hasher = password_hasher
         self._add = add_repository
         self._read = read_repository
+        self._update = update_repository
         self._uow = uow
 
     async def create_user(
@@ -87,3 +91,16 @@ class UserService:
             )
             for user in users_list
         ]
+
+    async def change_role(self, user_id: int, role: RoleEnum) -> None:
+        await self._update.change_role(
+            user_id=UserID(user_id),
+            role=role,
+        )
+        await self._uow.commit()
+
+    async def change_status(self, user_id: int, *, is_active: bool) -> None:
+        await self._update.change_status(
+            user_id=UserID(user_id), is_active=is_active
+        )
+        await self._uow.commit()

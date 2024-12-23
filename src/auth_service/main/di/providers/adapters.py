@@ -20,11 +20,13 @@ from auth_service.application.user.protocols import (
     PasswordHasherProtocol,
     UserCreateProtocol,
     UserReadProtocol,
+    UserUpdateProtocol,
 )
 from auth_service.infrastructure.user.repositories import (
     PasswordHasherRepository,
     UserCreateRepository,
     UserReadRepository,
+    UserUpdateRepository,
 )
 
 DBURI = NewType("DBURI", str)
@@ -82,6 +84,11 @@ def repository_provider() -> Provider:
         UserReadRepository,
         scope=Scope.REQUEST,
         provides=UserReadProtocol,
+    )
+    provider.provide(
+        UserUpdateRepository,
+        scope=Scope.REQUEST,
+        provides=UserUpdateProtocol,
     )
 
     return provider

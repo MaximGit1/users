@@ -6,6 +6,7 @@ from auth_service.application.user.responses import (
     UserIdResponse,
 )
 from auth_service.application.user.service import UserService
+from auth_service.domain.user.enums import RoleEnum
 from auth_service.infrastructure.user.schemes import UserCreateScheme
 
 router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
@@ -39,3 +40,28 @@ async def create_user(
     username, password = user_data.get_data()
 
     return await user_service.create_user(username=username, password=password)
+
+
+@router.patch("/{user_id}/update/role")
+async def update_role(
+    user_id: int,
+    role: RoleEnum,
+    user_service: FromDishka[UserService],
+) -> None:
+    await user_service.change_role(
+        user_id=user_id,
+        role=role,
+    )
+
+
+@router.patch("/{user_id}/update/status/")
+async def update_user_status(
+    user_id: int,
+    *,
+    is_active: bool,
+    user_service: FromDishka[UserService],
+) -> None:
+    await user_service.change_status(
+        user_id=user_id,
+        is_active=is_active,
+    )
