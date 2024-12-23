@@ -44,7 +44,7 @@ class DBProvider(Provider):
     async def create_engine(self, db_uri: DBURI) -> AsyncIterator[AsyncEngine]:
         engine = create_async_engine(
             db_uri,
-            echo=True,
+            echo=False,
         )
         yield engine
         await engine.dispose()
