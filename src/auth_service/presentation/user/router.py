@@ -30,8 +30,6 @@ async def get_user_by_id(
 async def get_user_by_username(
     username: str, user_service: FromDishka[UserService]
 ) -> UserFullBodyResponse:
-    if username == "raise":
-        raise IndexError("raise")
     return await user_service.get_by_username(username=username)
 
 
