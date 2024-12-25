@@ -9,8 +9,8 @@ from auth_service.application.user.responses import (
 )
 from auth_service.application.user.service import UserService
 from auth_service.domain.user.enums import RoleEnum
-from auth_service.infrastructure.user.schemes import UserCreateScheme
 from auth_service.presentation.common.schemes import PaginationParams
+from auth_service.presentation.user.schemes import UserCreateScheme
 
 router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 
