@@ -4,7 +4,6 @@ from typing import Any
 from sqlalchemy import Row, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth_service.application.user.dto import UserDTO
 from auth_service.application.user.protocols import UserReadProtocol
 from auth_service.domain.user.entities import User
 from auth_service.domain.user.enums import RoleEnum
@@ -47,19 +46,12 @@ class UserReadRepository(UserReadProtocol):
         return self._load_users(result.all())
 
     def _load_user(self, row: Row[Any]) -> User:
-        dto = UserDTO(
-            user_id=row.id,
-            username=row.username,
-            password=row.hashed_password,
-            role=row.role,
-            is_active=row.is_active,
-        )
         return User(
-            id=UserID(dto.user_id),
-            username=Username(dto.username),
-            hashed_password=HashedPassword(dto.password),
-            role=self._convert_role(dto.role),
-            is_active=dto.is_active,
+            id=UserID(row.id),
+            username=Username(row.username),
+            hashed_password=HashedPassword(row.hashed_password),
+            role=self._convert_role(row.role),
+            is_active=row.is_active,
         )
 
     @staticmethod

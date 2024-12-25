@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import registry
 
-from auth_service.application.user.dto import UserDTO
+from auth_service.domain.user.entities import User
 
 metadata = MetaData(
     naming_convention={
@@ -51,4 +51,4 @@ users_table = Table(
 
 
 def map_tables() -> None:
-    mapper_registry.map_imperatively(UserDTO, users_table)
+    mapper_registry.map_imperatively(User, users_table)
