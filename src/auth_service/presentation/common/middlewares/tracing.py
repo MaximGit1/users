@@ -93,9 +93,7 @@ class TracingMiddleware(BaseHTTPMiddleware):
             "request_method": request.method,
             "request_path": request.url.path,
             "request_size": int(request.headers.get("content-length", 0)),
-            "request_host": f"{client.host}:{client.port}"
-            if client
-            else "",
+            "request_host": f"{client.host}:{client.port}" if client else "",
             "response_status": status_code,
             "response_size": int(response.headers.get("content-length", 0)),
             "response_duration": end_time,

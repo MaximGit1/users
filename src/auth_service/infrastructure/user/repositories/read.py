@@ -39,8 +39,8 @@ class UserReadRepository(UserReadProtocol):
 
         return self._load_user(result)
 
-    async def get_all(self) -> list[User]:
-        stmt = select(users_table)
+    async def get_all(self, offset: int, limit: int) -> list[User]:
+        stmt = select(users_table).offset(offset).limit(limit)
         result = await self._session.execute(stmt)
 
         return self._load_users(result.all())

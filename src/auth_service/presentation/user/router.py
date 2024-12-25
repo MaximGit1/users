@@ -1,5 +1,7 @@
+from typing import Annotated
+
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from auth_service.application.user.responses import (
     UserFullBodyResponse,
@@ -8,6 +10,7 @@ from auth_service.application.user.responses import (
 from auth_service.application.user.service import UserService
 from auth_service.domain.user.enums import RoleEnum
 from auth_service.infrastructure.user.schemes import UserCreateScheme
+from auth_service.presentation.common.schemes import PaginationParams
 
 router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 
@@ -15,8 +18,12 @@ router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 @router.get("/")
 async def get_all(
     user_service: FromDishka[UserService],
+    pagination: Annotated[PaginationParams, Depends()],
 ) -> list[UserFullBodyResponse]:
-    return await user_service.get_all()
+    return await user_service.get_all(
+        offset=pagination.offset,
+        limit=pagination.limit,
+    )
 
 
 @router.get("/{user_id}")
