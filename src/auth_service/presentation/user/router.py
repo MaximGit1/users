@@ -42,7 +42,8 @@ async def get_user_by_username(
 
 @router.post("/create/", status_code=201)
 async def create_user(
-    user_data: UserCreateScheme, user_service: FromDishka[UserService]
+    user_data: Annotated[UserCreateScheme, Depends()],
+    user_service: FromDishka[UserService],
 ) -> UserIdResponse:
     username, password = user_data.get_data()
 
