@@ -10,7 +10,7 @@ from starlette.middleware.base import (
 from starlette.requests import Request
 from starlette.responses import Response
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("api_logger")
 
 
 class BoundCode(IntEnum):
@@ -106,7 +106,7 @@ class TracingMiddleware(BaseHTTPMiddleware):
         elif status_code <= BoundCode.REDIRECT:
             logger.info("Redirect response", extra=extra)
         elif status_code <= BoundCode.CLIENT_ERROR:
-            logger.warning("Client request error", extra=extra)
+            logger.info("Client request error", extra=extra)
         else:
             logger.error("Server response error", extra=extra)
 
