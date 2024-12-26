@@ -7,9 +7,7 @@ from fastapi import FastAPI
 from auth_service.main.di.main import container_factory
 from auth_service.presentation.base_router import get_routers_list
 from auth_service.presentation.common.exc_handlers import init_exc_handlers
-from auth_service.presentation.common.middlewares.tracing import (
-    TracingMiddleware,
-)
+from auth_service.presentation.middleware_setup import init_middleware
 
 
 def init_di(app: FastAPI) -> None:
@@ -36,7 +34,6 @@ def create_app() -> FastAPI:
     init_di(app)
     init_routers(app)
     init_exc_handlers(app)
-
-    app.add_middleware(TracingMiddleware)
+    init_middleware(app)
 
     return app
