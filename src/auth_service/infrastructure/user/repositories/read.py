@@ -1,10 +1,16 @@
 from collections.abc import Sequence
 from typing import Any
 
-from sqlalchemy import Row, select
+from sqlalchemy import Row, asc, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth_service.application.user.protocols import UserReadProtocol
+from auth_service.application.user.request import (
+    PaginationParams,
+    SearchFilters,
+    SearchFilterTypes,
+    SortOrder,
+)
 from auth_service.domain.user.entities import User
 from auth_service.domain.user.enums import RoleEnum
 from auth_service.domain.user.value_objects import (
@@ -39,8 +45,25 @@ class UserReadRepository(UserReadProtocol):
 
         return self._load_user(result)
 
-    async def get_all(self, offset: int, limit: int) -> list[User]:
-        stmt = select(users_table).offset(offset).limit(limit)
+    async def get_all(
+        self, pagination: PaginationParams, filters: SearchFilters
+    ) -> list[User]:
+        stmt = (
+            select(users_table)
+            .offset(pagination.offset)
+            .limit(pagination.limit)
+        )
+
+        if filters.order_by == SearchFilterTypes.USERNAME:
+            order_by_value = users_table.c.username
+        else:
+            order_by_value = users_table.c.id
+
+        if filters.order == SortOrder.ASC:
+            stmt = stmt.order_by(asc(order_by_value))
+        elif filters.order == SortOrder.DESC:
+            stmt = stmt.order_by(desc(order_by_value))
+
         result = await self._session.execute(stmt)
 
         return self._load_users(result.all())

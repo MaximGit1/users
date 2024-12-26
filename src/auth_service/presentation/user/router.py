@@ -3,6 +3,7 @@ from typing import Annotated
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Depends
 
+from auth_service.application.user.request import SearchFilters
 from auth_service.application.user.responses import (
     UserFullBodyResponse,
     UserIdResponse,
@@ -19,10 +20,11 @@ router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 async def get_all(
     user_service: FromDishka[UserService],
     pagination: Annotated[PaginationParams, Depends()],
+    filters: Annotated[SearchFilters, Depends()],
 ) -> list[UserFullBodyResponse]:
     return await user_service.get_all(
-        offset=pagination.offset,
-        limit=pagination.limit,
+        pagination=pagination.to_model(),
+        filters=filters,
     )
 
 

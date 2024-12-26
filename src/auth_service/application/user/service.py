@@ -9,6 +9,10 @@ from auth_service.application.user.protocols import (
     UserReadProtocol,
     UserUpdateProtocol,
 )
+from auth_service.application.user.request import (
+    PaginationParams,
+    SearchFilters,
+)
 from auth_service.application.user.responses import (
     UserFullBodyResponse,
     UserIdResponse,
@@ -80,11 +84,13 @@ class UserService:
         )
 
     async def get_all(
-        self, offset: int = 0, limit: int = 10
+        self,
+        pagination: PaginationParams,
+        filters: SearchFilters,
     ) -> list[UserFullBodyResponse]:
         users_list = await self._read.get_all(
-            offset=offset,
-            limit=limit,
+            pagination=pagination,
+            filters=filters,
         )
 
         return [
