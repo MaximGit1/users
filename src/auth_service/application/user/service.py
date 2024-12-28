@@ -135,3 +135,14 @@ class UserService:
             raise UserBannedError
 
         return user.id
+
+    async def verify_role(self, user_id: int, required_role: RoleEnum) -> bool:
+        user = await self._read.get_by_id(user_id=UserID(user_id))
+
+        if user is None:
+            raise UserNotFoundError(user_id=user_id)
+
+        return RoleEnum.validate_role(
+            user_role=user.role,
+            required_role=required_role,
+        )
