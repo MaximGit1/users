@@ -22,9 +22,11 @@ class AccessManagerRepository(JWTManageProtocol):
 
     def generate_token(self, sub: int) -> Token:
         payload = self._generate_payload(sub=sub)
-        return Token(encode(
-            payload.to_dict(), self._private_key, algorithm=self._algorithm
-        ))
+        return Token(
+            encode(
+                payload.to_dict(), self._private_key, algorithm=self._algorithm
+            )
+        )
 
     def parse_token(self, token: Token) -> TokenPayload | None:
         pass

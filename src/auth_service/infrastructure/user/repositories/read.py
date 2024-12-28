@@ -4,13 +4,13 @@ from typing import Any
 from sqlalchemy import Row, asc, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth_service.application.user.protocols import UserReadProtocol
-from auth_service.application.user.request import (
+from auth_service.application.common.request_response_models import (
     PaginationParams,
     SearchFilters,
     SearchFilterTypes,
     SortOrder,
 )
+from auth_service.application.user.protocols import UserReadProtocol
 from auth_service.domain.user.entities import User
 from auth_service.domain.user.enums import RoleEnum
 from auth_service.domain.user.value_objects import (

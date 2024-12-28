@@ -3,8 +3,10 @@ from typing import Annotated
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Depends
 
-from auth_service.application.user.request import SearchFilters
-from auth_service.application.user.responses import (
+from auth_service.application.common.request_response_models import (
+    SearchFilters,
+)
+from auth_service.application.user.request_response_models import (
     UserFullBodyResponse,
     UserIdResponse,
 )

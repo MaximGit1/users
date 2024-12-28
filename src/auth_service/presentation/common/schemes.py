@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from auth_service.application.user.request import (
+from auth_service.application.common.request_response_models import (
     PaginationParams as ApplicationPaginationParams,
 )
 

@@ -33,7 +33,6 @@ def create_jwt_env() -> JWTSettings:
     private_key_path = BASE_PATH.joinpath(private_key_path_env)
     public_key_path = BASE_PATH.joinpath(public_key_path_env)
 
-
     expire_variable = getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
     if expire_variable is not None:
@@ -45,8 +44,6 @@ def create_jwt_env() -> JWTSettings:
 
     if algorith is None:
         raise ValueError("ALGORITHM must not be None")
-
-
 
     return JWTSettings(
         algorithm=algorith,

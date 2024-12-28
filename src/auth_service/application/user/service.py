@@ -1,4 +1,8 @@
 from auth_service.application.common.protocols import UoWProtocol
+from auth_service.application.common.request_response_models import (
+    PaginationParams,
+    SearchFilters,
+)
 from auth_service.application.user.exceptions import (
     UserAlreadyExistsError,
     UserBannedError,
@@ -11,11 +15,7 @@ from auth_service.application.user.protocols import (
     UserReadProtocol,
     UserUpdateProtocol,
 )
-from auth_service.application.user.request import (
-    PaginationParams,
-    SearchFilters,
-)
-from auth_service.application.user.responses import (
+from auth_service.application.user.request_response_models import (
     UserFullBodyResponse,
     UserIdResponse,
 )
