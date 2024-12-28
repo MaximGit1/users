@@ -15,12 +15,16 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from auth_service.application.auth.protocols import JWTManageProtocol
 from auth_service.application.common.protocols.uow import UoWProtocol
 from auth_service.application.user.protocols import (
     PasswordHasherProtocol,
     UserCreateProtocol,
     UserReadProtocol,
     UserUpdateProtocol,
+)
+from auth_service.infrastructure.auth.repositories.access import (
+    AccessManagerRepository,
 )
 from auth_service.infrastructure.user.repositories import (
     PasswordHasherRepository,
@@ -89,6 +93,11 @@ def repository_provider() -> Provider:
         UserUpdateRepository,
         scope=Scope.REQUEST,
         provides=UserUpdateProtocol,
+    )
+    provider.provide(
+        AccessManagerRepository,
+        scope=Scope.REQUEST,
+        provides=JWTManageProtocol,
     )
 
     return provider

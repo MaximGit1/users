@@ -1,6 +1,8 @@
 from auth_service.application.common.protocols import UoWProtocol
 from auth_service.application.user.exceptions import (
     UserAlreadyExistsError,
+    UserBannedError,
+    UserInvalidCredentialsError,
     UserNotFoundError,
 )
 from auth_service.application.user.protocols import (
@@ -115,3 +117,21 @@ class UserService:
             user_id=UserID(user_id), is_active=is_active
         )
         await self._uow.commit()
+
+    async def authenticate_user(
+        self, username: Username, password: RawPassword
+    ) -> int:
+        user = await self._read.get_by_username(username=username)
+
+        if not (
+            user
+            and self._password_hasher.validate_password(
+                password=password, hashed_password=user.hashed_password
+            )
+        ):
+            raise UserInvalidCredentialsError
+
+        if not user.is_active:
+            raise UserBannedError
+
+        return user.id

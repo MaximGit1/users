@@ -20,3 +20,13 @@ class UserNotFoundError(ApplicationError):
         msg += "not found."
 
         super().__init__(msg)
+
+
+class UserInvalidCredentialsError(ApplicationError):
+    def __init__(self):
+        super().__init__("Invalid user credentials: username or password.")
+
+
+class UserBannedError(ApplicationError):
+    def __init__(self):
+        super().__init__("User banned.")

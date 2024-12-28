@@ -6,6 +6,8 @@ from starlette.responses import JSONResponse
 
 from auth_service.application.user.exceptions import (
     UserAlreadyExistsError,
+    UserBannedError,
+    UserInvalidCredentialsError,
     UserNotFoundError,
 )
 from auth_service.domain.user.exceptions import UserDomainValidationError
@@ -35,4 +37,12 @@ def init_exc_handlers(app: "FastAPI") -> None:
     app.add_exception_handler(
         UserNotFoundError,
         part(_validate, status=code.HTTP_404_NOT_FOUND),
+    )
+    app.add_exception_handler(
+        UserInvalidCredentialsError,
+        part(_validate, status=code.HTTP_401_UNAUTHORIZED),
+    )
+    app.add_exception_handler(
+        UserBannedError,
+        part(_validate, status=code.HTTP_409_CONFLICT),
     )
