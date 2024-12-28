@@ -5,11 +5,25 @@ from fastapi import APIRouter, Depends
 
 from auth_service.application.auth.request_response_models import Token
 from auth_service.application.auth.service import AuthService
+from auth_service.application.user.request_response_models import (
+    UserIdResponse,
+)
 from auth_service.application.user.service import UserService
 from auth_service.domain.user.enums import RoleEnum
 from auth_service.presentation.auth.schemes import UserLoginInput
+from auth_service.presentation.user.schemes import UserCreateScheme
 
 router = APIRouter(prefix="/auth", tags=["Auth"], route_class=DishkaRoute)
+
+
+@router.post("/register/", status_code=201)
+async def create_user(
+    user_data: Annotated[UserCreateScheme, Depends()],
+    user_service: FromDishka[UserService],
+) -> UserIdResponse:
+    username, password = user_data.get_data()
+
+    return await user_service.create_user(username=username, password=password)
 
 
 @router.post("/login/")

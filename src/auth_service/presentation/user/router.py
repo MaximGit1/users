@@ -8,12 +8,10 @@ from auth_service.application.common.request_response_models import (
 )
 from auth_service.application.user.request_response_models import (
     UserFullBodyResponse,
-    UserIdResponse,
 )
 from auth_service.application.user.service import UserService
 from auth_service.domain.user.enums import RoleEnum
 from auth_service.presentation.common.schemes import PaginationParams
-from auth_service.presentation.user.schemes import UserCreateScheme
 
 router = APIRouter(prefix="/users", tags=["Users"], route_class=DishkaRoute)
 
@@ -42,16 +40,6 @@ async def get_user_by_username(
     username: str, user_service: FromDishka[UserService]
 ) -> UserFullBodyResponse:
     return await user_service.get_by_username(username=username)
-
-
-@router.post("/create/", status_code=201)
-async def create_user(
-    user_data: Annotated[UserCreateScheme, Depends()],
-    user_service: FromDishka[UserService],
-) -> UserIdResponse:
-    username, password = user_data.get_data()
-
-    return await user_service.create_user(username=username, password=password)
 
 
 @router.patch("/{user_id}/update/role")
