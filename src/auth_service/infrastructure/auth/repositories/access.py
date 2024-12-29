@@ -10,15 +10,15 @@ from auth_service.application.auth.request_response_models import (
     TokenPayload,
     TokenTypes,
 )
-from auth_service.main.config import jwt_settings
+from auth_service.main.config import Config
 
 
 class AccessManagerRepository(JWTManageProtocol):
-    def __init__(self):
-        self._private_key = jwt_settings.private_key
-        self._public_key = jwt_settings.public_key
-        self._algorithm = jwt_settings.algorithm
-        self._token_expire_minutes = jwt_settings.access_token_expire_minutes
+    def __init__(self, config: Config) -> None:
+        self._private_key = config.jwt.private_key
+        self._public_key = config.jwt.public_key
+        self._algorithm = config.jwt.algorithm
+        self._token_expire_minutes = config.jwt.access_token_expire_minutes
 
     def generate_token(self, sub: int) -> Token:
         payload = self._generate_payload(sub=sub)

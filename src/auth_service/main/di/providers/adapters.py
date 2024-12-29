@@ -32,6 +32,7 @@ from auth_service.infrastructure.user.repositories import (
     UserReadRepository,
     UserUpdateRepository,
 )
+from auth_service.main.config import Config, create_config
 
 DBURI = NewType("DBURI", str)
 
@@ -103,8 +104,16 @@ def repository_provider() -> Provider:
     return provider
 
 
+def config_provider() -> Provider:
+    provider = Provider()
+    provider.provide(create_config, scope=Scope.APP, provides=Config)
+
+    return provider
+
+
 def get_adapters_providers() -> list[Provider]:
     return [
         DBProvider(),
         repository_provider(),
+        config_provider(),
     ]

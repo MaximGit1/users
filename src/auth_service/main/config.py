@@ -5,56 +5,52 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-BASE_PATH = Path.cwd().parent.parent
-
-if BASE_PATH is None:
-    raise ValueError("BASE_PATH must not be None")
-
 load_dotenv()
 
 
-@dataclass
-class JWTSettings:
+@dataclass(frozen=True)
+class JWTConfig:
     private_key: str
     public_key: str
     algorithm: str
     access_token_expire_minutes: timedelta
 
 
-def create_jwt_env() -> JWTSettings:
-    private_key_path_env = getenv("PRIVATE_KEY_PATH")
-    public_key_path_env = getenv("PUBLIC_KEY_PATH")
+@dataclass(frozen=True)
+class Config:
+    jwt: JWTConfig
 
-    if not private_key_path_env or not public_key_path_env:
+
+def create_config() -> Config:
+    base_path: Path = Path.cwd().parent.parent
+
+    private_key_path = getenv("PRIVATE_KEY_PATH")
+    public_key_path = getenv("PUBLIC_KEY_PATH")
+    algorithm = getenv("ALGORITHM")
+    access_token_expire_minutes_str = getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+
+    if (
+        not private_key_path
+        or not public_key_path
+        or not algorithm
+        or not access_token_expire_minutes_str
+    ):
+        raise ValueError("Environment variables not loaded or missing.")
+
+    try:
+        access_token_expire_minutes = int(access_token_expire_minutes_str)
+    except ValueError:
         raise ValueError(
-            "Both PRIVATE_KEY_PATH and PUBLIC_KEY_PATH must not be None"
+            "ACCESS_TOKEN_EXPIRE_MINUTES must be an integer."
+        ) from None
+
+    return Config(
+        jwt=JWTConfig(
+            private_key=base_path.joinpath(private_key_path).read_text(),
+            public_key=base_path.joinpath(public_key_path).read_text(),
+            algorithm=algorithm,
+            access_token_expire_minutes=timedelta(
+                minutes=access_token_expire_minutes
+            ),
         )
-
-    private_key_path = BASE_PATH.joinpath(private_key_path_env)
-    public_key_path = BASE_PATH.joinpath(public_key_path_env)
-
-    expire_variable = getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
-
-    if expire_variable is not None:
-        access_token_expire_minutes = int(expire_variable)
-    else:
-        raise ValueError("expire_variable must not be None")
-
-    algorith = getenv("ALGORITHM")
-
-    if algorith is None:
-        raise ValueError("ALGORITHM must not be None")
-
-    return JWTSettings(
-        algorithm=algorith,
-        private_key=Path(private_key_path).read_text(),
-        public_key=Path(public_key_path).read_text(),
-        access_token_expire_minutes=timedelta(
-            minutes=access_token_expire_minutes
-        ),
     )
-
-
-jwt_settings = create_jwt_env()
-
-__all__ = ("jwt_settings",)
