@@ -40,9 +40,7 @@ def create_config() -> Config:
     try:
         access_token_expire_minutes = int(access_token_expire_minutes_str)
     except ValueError:
-        raise ValueError(
-            "ACCESS_TOKEN_EXPIRE_MINUTES must be an integer."
-        ) from None
+        raise ValueError("token expire minutes must be an integer.") from None
 
     return Config(
         jwt=JWTConfig(
